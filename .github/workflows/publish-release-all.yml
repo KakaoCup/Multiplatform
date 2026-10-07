@@ -12,8 +12,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        project: [ compose, compose-semantics, compose-test, compose-ui ]
+        include:
+          # :compose is Kotlin Multiplatform, its iOS artifacts are built on macOS
+          - project: compose
+            runner: macos-latest
+          - project: compose-semantics
+            runner: ubuntu-latest
+          - project: compose-test
+            runner: ubuntu-latest
+          - project: compose-ui
+            runner: ubuntu-latest
     uses: ./.github/workflows/publish-release-workflow.yaml
     with:
       project: ${{ matrix.project }}
+      runner: ${{ matrix.runner }}
     secrets: inherit

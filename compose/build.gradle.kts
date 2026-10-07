@@ -3,6 +3,7 @@ plugins {
     id("com.android.kotlin.multiplatform.library")
     alias(libs.plugins.jetbrains.compose)
     id("org.jetbrains.kotlin.plugin.compose")
+    id("convention.publishing")
 }
 
 kotlin {

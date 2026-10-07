@@ -19,35 +19,27 @@ group = "io.github.kakaocup"
 version = readVersion() + versionSuffix
 
 configure<PublishingExtension> {
-    publications {
-        create<MavenPublication>("default") {
-            groupId = project.group.toString()
+    publications.withType<MavenPublication>().configureEach {
+        groupId = project.group.toString()
 
-            components.whenObjectAdded {
-                if (this.name == "release") {
-                    from(components["release"])
+        pom {
+            name.set("Kakao Compose")
+            url.set("https://github.com/KakaoCup/Compose")
+            description.set("Nice and simple DSL for Espresso in Kotlin")
+
+            licenses {
+                license {
+                    name.set("The Apache License, Version 2.0")
+                    url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
                 }
             }
 
-            pom {
-                name.set("Kakao Compose")
-                url.set("https://github.com/KakaoCup/Compose")
-                description.set("Nice and simple DSL for Espresso in Kotlin")
+            developers(findCollaborators())
 
-                licenses {
-                    license {
-                        name.set("The Apache License, Version 2.0")
-                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-                    }
-                }
-
-                developers(findCollaborators())
-
-                scm {
-                    url.set("https://github.com/KakaoCup/Compose.git")
-                    connection.set("scm:git:ssh://github.com/KakaoCup/Compose")
-                    developerConnection.set("scm:git:ssh://github.com/KakaoCup/Compose")
-                }
+            scm {
+                url.set("https://github.com/KakaoCup/Compose.git")
+                connection.set("scm:git:ssh://github.com/KakaoCup/Compose")
+                developerConnection.set("scm:git:ssh://github.com/KakaoCup/Compose")
             }
         }
     }
@@ -75,6 +67,7 @@ configure<PublishingExtension> {
     }
 }
 
+// Android-only libraries: a single "default" publication built from the release variant
 plugins.withId("com.android.library") {
     configure<LibraryExtension> {
         publishing {
@@ -84,13 +77,44 @@ plugins.withId("com.android.library") {
             }
         }
     }
+
+    configure<PublishingExtension> {
+        publications {
+            create<MavenPublication>("default") {
+                components.whenObjectAdded {
+                    if (this.name == "release") {
+                        from(components["release"])
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Multiplatform libraries: KMP creates the publications itself, Maven Central still requires a javadoc jar per artifact
+plugins.withId("org.jetbrains.kotlin.multiplatform") {
+    configure<PublishingExtension> {
+        publications.withType<MavenPublication>().configureEach {
+            val publicationName = name
+            val javadocJar = tasks.register<Jar>("${publicationName}JavadocJar") {
+                archiveClassifier.set("javadoc")
+                archiveAppendix.set(publicationName)
+            }
+            artifact(javadocJar)
+        }
+    }
 }
 
 val passphrase: String? = System.getenv("GPG_PASSPHRASE")
 
 if (!passphrase.isNullOrBlank()) {
     project.configure<SigningExtension> {
-        sign(publishing.publications.getByName("default"))
+        sign(publishing.publications)
+    }
+
+    // With several publications every publish task picks up all signature files, so it must run after all signing tasks
+    tasks.withType<AbstractPublishToMaven>().configureEach {
+        dependsOn(tasks.withType<Sign>())
     }
 
     project.extra.set("signing.keyId", "0110979F")
