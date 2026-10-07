@@ -19,7 +19,7 @@ jobs:
           - package: compose
             runner: macos-latest
           - package: compose-semantics
-            runner: ubuntu-latest
+            runner: macos-latest
           - package: compose-test
             runner: ubuntu-latest
           - package: compose-ui

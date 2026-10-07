@@ -17,7 +17,7 @@ jobs:
           - project: compose
             runner: macos-latest
           - project: compose-semantics
-            runner: ubuntu-latest
+            runner: macos-latest
           - project: compose-test
             runner: ubuntu-latest
           - project: compose-ui
