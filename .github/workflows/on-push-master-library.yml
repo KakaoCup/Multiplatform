@@ -10,11 +10,20 @@ on:
 jobs:
   deploy-osshr:
     name: Deploy to OSSHR
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runner }}
     strategy:
       fail-fast: false
       matrix:
-        package: [ compose, compose-semantics, compose-test, compose-ui ]
+        include:
+          # :compose is Kotlin Multiplatform, its iOS artifacts are built on macOS
+          - package: compose
+            runner: macos-latest
+          - package: compose-semantics
+            runner: macos-latest
+          - package: compose-test
+            runner: ubuntu-latest
+          - package: compose-ui
+            runner: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -26,7 +35,7 @@ jobs:
       - uses: little-core-labs/get-git-tag@v3.0.2
 
       - name: Deploy Snapshot to OSSRH
-        run: ./gradlew :$PACKAGE:publishDefaultPublicationToOSSHRRepository -PreleaseMode=SNAPSHOT
+        run: ./gradlew :$PACKAGE:publishAllPublicationsToOSSHRRepository -PreleaseMode=SNAPSHOT
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}

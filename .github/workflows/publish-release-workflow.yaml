@@ -6,11 +6,15 @@ on:
       project:
         required: true
         type: string
+      runner:
+        required: false
+        type: string
+        default: ubuntu-latest
 
 jobs:
   deploy-osshr:
     name: Deploy ${{ inputs.project }} to OSSHR
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runner }}
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 17
@@ -20,7 +24,7 @@ jobs:
           java-version: 17
           cache: gradle
       - name: Deploy Release to OSSRH
-        run: ./gradlew :$PROJECT:publishDefaultPublicationToOSSHRRepository -PreleaseMode=RELEASE
+        run: ./gradlew :$PROJECT:publishAllPublicationsToOSSHRRepository -PreleaseMode=RELEASE
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
@@ -36,7 +40,7 @@ jobs:
       # See https://central.sonatype.org/publish/publish-portal-ossrh-staging-api/
       - name: Release ${{ inputs.project }} to Maven Central
         run: |
-          TOKEN=$(printf '%s:%s' "$SONATYPE_USERNAME" "$SONATYPE_PASSWORD" | base64 -w0)
+          TOKEN=$(printf '%s:%s' "$SONATYPE_USERNAME" "$SONATYPE_PASSWORD" | base64 | tr -d '\n')
           URL="https://ossrh-staging-api.central.sonatype.com/manual/upload/defaultRepository/io.github.kakaocup"
           curl --fail-with-body -sS -X POST -H "Authorization: Bearer $TOKEN" "$URL?publishing_type=automatic&deployment_name=$PROJECT-$GITHUB_RUN_NUMBER"
         env:
