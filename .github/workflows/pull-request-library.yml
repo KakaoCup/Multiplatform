@@ -70,3 +70,70 @@ jobs:
           device-id: MediumPhone.arm
           os-version-id: ${{ matrix.api }}
           num-flaky-test-attempts: 4
+
+  assemble-kmp-android-test-apk:
+    name: Assemble KMP Instrumental APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: "zulu"
+          java-version: 17
+          cache: gradle
+      - name: Assemble KMP Instrumental APK
+        run: bash ./gradlew :sample-kmp:assembleAndroidDeviceTest
+      - name: Upload KMP test APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: kmp-test-apk
+          path: sample-kmp/build/outputs/apk/androidTest/sample-kmp-androidTest.apk
+
+  firebase-lab-test-kmp:
+    needs: [ assemble-kmp-android-test-apk ]
+    name: Firebase Instrumental API (KMP)
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        api: [ 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36 ]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download KMP Test APK
+        uses: actions/download-artifact@v4
+        with:
+          name: kmp-test-apk
+      # The KMP device-test APK instruments itself (it bundles the code under test),
+      # so it is passed as both the app and the test APK.
+      - name: Run KMP tests on Firebase Test Lab for API ${{ matrix.api }}
+        uses: vacxe/firebase-test-lab-action@0.0.6
+        with:
+          service-account: ${{ secrets.FIREBASE_TESTLAB_JSON }}
+          app: sample-kmp-androidTest.apk
+          test: sample-kmp-androidTest.apk
+          device-id: MediumPhone.arm
+          os-version-id: ${{ matrix.api }}
+          num-flaky-test-attempts: 4
+
+  ios-simulator-test-kmp:
+    name: iOS Simulator Tests (KMP)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: "zulu"
+          java-version: 17
+          cache: gradle
+      - name: Run KMP tests on iOS Simulator
+        run: bash ./gradlew :sample-kmp:iosSimulatorArm64Test
+      - name: Upload iOS test reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-test-reports
+          path: |
+            sample-kmp/build/reports/tests/iosSimulatorArm64Test
+            sample-kmp/build/test-results/iosSimulatorArm64Test
