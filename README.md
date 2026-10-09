@@ -311,7 +311,7 @@ Maven
 ```xml
 <dependency>
     <groupId>io.github.kakaocup</groupId>
-    <artifactId>compose</artifactId>
+    <artifactId>compose-multiplatform</artifactId>
     <version><latest version></version>
     <type>pom</type>
 </dependency>
@@ -319,15 +319,38 @@ Maven
 or Gradle:
 ```groovy
 dependencies {
-    androidTestImplementation 'io.github.kakaocup:compose:<latest version>'
+    androidTestImplementation 'io.github.kakaocup:compose-multiplatform:<latest version>'
 }
 ```
 
 ```kotlin
 dependencies {
-    androidTestImplementation("io.github.kakaocup:compose:<latest version>")
+    androidTestImplementation("io.github.kakaocup:compose-multiplatform:<latest version>")
 }
 ```
+
+Kotlin Multiplatform:
+```kotlin
+kotlin {
+    sourceSets {
+        commonTest.dependencies {
+            implementation("io.github.kakaocup:compose-multiplatform:<latest version>")
+        }
+    }
+}
+```
+
+#### Migrating from Kakao Compose
+The artifacts were renamed when the library moved to Compose Multiplatform, starting at version `2.0.0`:
+
+| Kakao Compose | Kakao Compose Multiplatform |
+|---|---|
+| `io.github.kakaocup:compose` | `io.github.kakaocup:compose-multiplatform` |
+| `io.github.kakaocup:compose-semantics` | `io.github.kakaocup:compose-multiplatform-semantics` |
+| `io.github.kakaocup:compose-ui` | `io.github.kakaocup:compose-multiplatform-ui` |
+| `io.github.kakaocup:compose-test` | `io.github.kakaocup:compose-multiplatform-test` |
+
+Package names did not change, so imports stay the same. Remove the old artifacts when switching: keeping both makes Gradle report a capability conflict.
 
 ### Contribution Policy
 

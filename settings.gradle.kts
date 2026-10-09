@@ -1,7 +1,7 @@
-include(":compose")
-include(":compose-ui")
-include(":compose-test")
-include(":compose-semantics")
+include(":compose-multiplatform")
+include(":compose-multiplatform-ui")
+include(":compose-multiplatform-test")
+include(":compose-multiplatform-semantics")
 include(":sample")
 include(":sample-kmp")
 

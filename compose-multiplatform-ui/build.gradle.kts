@@ -9,6 +9,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":compose-semantics"))
+    implementation(project(":compose-multiplatform-semantics"))
     implementation(libs.androidx.compose.material)
 }

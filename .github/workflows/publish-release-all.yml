@@ -13,14 +13,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # :compose is Kotlin Multiplatform, its iOS artifacts are built on macOS
-          - project: compose
+          # :compose-multiplatform is Kotlin Multiplatform, its iOS artifacts are built on macOS
+          - project: compose-multiplatform
             runner: macos-latest
-          - project: compose-semantics
+          - project: compose-multiplatform-semantics
             runner: macos-latest
-          - project: compose-test
+          - project: compose-multiplatform-test
             runner: ubuntu-latest
-          - project: compose-ui
+          - project: compose-multiplatform-ui
             runner: ubuntu-latest
     uses: ./.github/workflows/publish-release-workflow.yaml
     with:

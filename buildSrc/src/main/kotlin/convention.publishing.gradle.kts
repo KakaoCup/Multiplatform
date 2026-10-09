@@ -23,9 +23,9 @@ configure<PublishingExtension> {
         groupId = project.group.toString()
 
         pom {
-            name.set("Kakao Compose")
-            url.set("https://github.com/KakaoCup/Compose")
-            description.set("Nice and simple DSL for Espresso in Kotlin")
+            name.set("Kakao Compose Multiplatform")
+            url.set("https://github.com/KakaoCup/Multiplatform")
+            description.set("Nice and simple DSL for Compose Multiplatform UI tests in Kotlin")
 
             licenses {
                 license {
@@ -37,9 +37,9 @@ configure<PublishingExtension> {
             developers(findCollaborators())
 
             scm {
-                url.set("https://github.com/KakaoCup/Compose.git")
-                connection.set("scm:git:ssh://github.com/KakaoCup/Compose")
-                developerConnection.set("scm:git:ssh://github.com/KakaoCup/Compose")
+                url.set("https://github.com/KakaoCup/Multiplatform.git")
+                connection.set("scm:git:ssh://github.com/KakaoCup/Multiplatform")
+                developerConnection.set("scm:git:ssh://github.com/KakaoCup/Multiplatform")
             }
         }
     }
@@ -105,6 +105,15 @@ plugins.withId("org.jetbrains.kotlin.multiplatform") {
     }
 }
 
+// The libraries keep the io.github.kakaocup.compose.* packages of Kakao Compose, so each artifact also declares
+// the capability of its Kakao Compose predecessor (compose-multiplatform-ui -> compose-ui). Gradle then reports
+// a capability conflict instead of duplicate classes when both end up on the same classpath.
+val legacyCapability = "${project.group}:${project.name.replace("compose-multiplatform", "compose")}:${project.version}"
+configurations.matching { it.isCanBeConsumed && !it.isCanBeResolved }.configureEach {
+    outgoing.capability("${project.group}:${project.name}:${project.version}")
+    outgoing.capability(legacyCapability)
+}
+
 val passphrase: String? = System.getenv("GPG_PASSPHRASE")
 
 if (!passphrase.isNullOrBlank()) {
@@ -136,7 +145,7 @@ tasks.register<Zip>("bundleForCentralSigned") {
 }
 
 fun readVersion(): String {
-    return project.findProperty("lib.version.${project.name}")?.toString() ?: throw Exception("Undefined version '\"lib.version.${project.name}\"' in versions.properties")
+    return project.findProperty("lib.version")?.toString() ?: throw Exception("Undefined version 'lib.version' in gradle.properties")
 }
 
 fun findCollaborators() = Action<MavenPomDeveloperSpec> {
