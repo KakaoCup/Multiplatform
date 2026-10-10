@@ -15,14 +15,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # :compose is Kotlin Multiplatform, its iOS artifacts are built on macOS
-          - package: compose
+          # :compose-multiplatform is Kotlin Multiplatform, its iOS artifacts are built on macOS
+          - package: compose-multiplatform
             runner: macos-latest
-          - package: compose-semantics
+          - package: compose-multiplatform-semantics
             runner: macos-latest
-          - package: compose-test
+          - package: compose-multiplatform-test
             runner: ubuntu-latest
-          - package: compose-ui
+          - package: compose-multiplatform-ui
             runner: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

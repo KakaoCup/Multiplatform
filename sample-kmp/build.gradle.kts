@@ -41,7 +41,7 @@ kotlin {
             implementation(kotlin("test"))
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.uiTest)
-            implementation(project(":compose"))
+            implementation(project(":compose-multiplatform"))
         }
         getByName("androidDeviceTest").dependencies {
             implementation(libs.androidx.test.runner)
