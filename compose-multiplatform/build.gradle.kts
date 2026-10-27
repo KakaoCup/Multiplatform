@@ -22,12 +22,13 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.jetbrains.compose.runtime)
             implementation(libs.jetbrains.compose.foundation)
-            implementation(libs.jetbrains.compose.ui)
-            implementation(libs.jetbrains.compose.ui.test)
+            // Compose UI test types are part of the public API (nodes, matchers, rules), so they are exposed to consumers
+            api(libs.jetbrains.compose.ui)
+            api(libs.jetbrains.compose.ui.test)
         }
         androidMain.dependencies {
-            implementation(libs.androidx.compose.ui.uiTestJunit4)
-            implementation(libs.androidx.test.ext.junit)
+            api(libs.androidx.compose.ui.uiTestJunit4)
+            api(libs.androidx.test.ext.junit)
         }
     }
 }
