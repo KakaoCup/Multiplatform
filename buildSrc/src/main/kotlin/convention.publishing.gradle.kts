@@ -108,8 +108,12 @@ plugins.withId("org.jetbrains.kotlin.multiplatform") {
 // The libraries keep the io.github.kakaocup.compose.* packages of Kakao Compose, so each artifact also declares
 // the capability of its Kakao Compose predecessor (compose-multiplatform-ui -> compose-ui). Gradle then reports
 // a capability conflict instead of duplicate classes when both end up on the same classpath.
+// Matched by name: the published variants (KMP "*Elements-published", AGP "*Publication") are neither consumable
+// nor resolvable, and the Android ones do not inherit capabilities from the consumable variants they mirror.
 val legacyCapability = "${project.group}:${project.name.replace("compose-multiplatform", "compose")}:${project.version}"
-configurations.matching { it.isCanBeConsumed && !it.isCanBeResolved }.configureEach {
+configurations.matching {
+    it.name.endsWith("Elements") || it.name.endsWith("Elements-published") || it.name.endsWith("Publication")
+}.configureEach {
     outgoing.capability("${project.group}:${project.name}:${project.version}")
     outgoing.capability(legacyCapability)
 }

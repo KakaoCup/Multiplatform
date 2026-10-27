@@ -6,6 +6,8 @@ plugins {
     id("convention.publishing")
 }
 kotlin {
+    jvmToolchain(libs.versions.jvmVersion.get().toInt())
+
     android {
         namespace = "io.github.kakaocup.compose.semantics"
         compileSdk = libs.versions.compileSdk.get().toInt()
