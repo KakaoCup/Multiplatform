@@ -105,8 +105,8 @@ plugins.withId("org.jetbrains.kotlin.multiplatform") {
     }
 }
 
-// The libraries keep the io.github.kakaocup.compose.* packages of Kakao Compose, so each artifact also declares
-// the capability of its Kakao Compose predecessor (compose-multiplatform-ui -> compose-ui). Gradle then reports
+// The library keeps the io.github.kakaocup.compose.* packages of Kakao Compose, so the artifact also declares
+// the capability of its Kakao Compose predecessor (compose-multiplatform -> compose). Gradle then reports
 // a capability conflict instead of duplicate classes when both end up on the same classpath.
 // Matched by name: the published variants (KMP "*Elements-published", AGP "*Publication") are neither consumable
 // nor resolvable, and the Android ones do not inherit capabilities from the consumable variants they mirror.
