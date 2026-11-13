@@ -18,12 +18,6 @@ jobs:
           # :compose-multiplatform is Kotlin Multiplatform, its iOS artifacts are built on macOS
           - package: compose-multiplatform
             runner: macos-latest
-          - package: compose-multiplatform-semantics
-            runner: macos-latest
-          - package: compose-multiplatform-test
-            runner: ubuntu-latest
-          - package: compose-multiplatform-ui
-            runner: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
