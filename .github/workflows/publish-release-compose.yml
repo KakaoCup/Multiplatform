@@ -1,12 +1,29 @@
 name: Compose Library Publish Release
 
+# Pushing a plain version tag such as 2.0.0 releases compose-multiplatform.
+# The tag must equal lib.version in gradle.properties, which is the version the build publishes.
 on:
   push:
     tags:
-      - 'compose_*'
+      - '[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
+  check-version:
+    name: Check tag matches lib.version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compare tag with lib.version
+        run: |
+          LIB_VERSION=$(sed -n 's/^lib\.version=//p' gradle.properties | tr -d '[:space:]')
+          echo "tag=$GITHUB_REF_NAME lib.version=$LIB_VERSION"
+          if [ "$GITHUB_REF_NAME" != "$LIB_VERSION" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match lib.version=$LIB_VERSION in gradle.properties"
+            exit 1
+          fi
+
   publish-release:
+    needs: check-version
     uses: ./.github/workflows/publish-release-workflow.yaml
     with:
       project: compose-multiplatform
