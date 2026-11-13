@@ -1,4 +1,3 @@
-import com.android.build.api.dsl.LibraryExtension
 import io.github.kakaocup.Github
 import java.net.URI
 
@@ -63,30 +62,6 @@ configure<PublishingExtension> {
                         ?: "https://central.sonatype.com/repository/maven-snapshots/"
                 }
             )
-        }
-    }
-}
-
-// Android-only libraries: a single "default" publication built from the release variant
-plugins.withId("com.android.library") {
-    configure<LibraryExtension> {
-        publishing {
-            singleVariant("release") {
-                withJavadocJar()
-                withSourcesJar()
-            }
-        }
-    }
-
-    configure<PublishingExtension> {
-        publications {
-            create<MavenPublication>("default") {
-                components.whenObjectAdded {
-                    if (this.name == "release") {
-                        from(components["release"])
-                    }
-                }
-            }
         }
     }
 }

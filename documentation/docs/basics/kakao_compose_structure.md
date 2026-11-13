@@ -6,14 +6,15 @@ sidebar_position: 3
 
 ### **Overview**
 
-Kakao Compose Multiplatform ships as a single module, with the following dependency structure:
+Kakao Compose Multiplatform ships as a single Kotlin Multiplatform module, targeting Android and iOS
+(`iosArm64`, `iosSimulatorArm64`), with the following dependency structure:
 
 ```mermaid
 flowchart TD
 %% Nodes
     KCompose("compose-multiplatform")
     AEspresso("Espresso")
-    ACompose("Android Compose")
+    ACompose("Compose UI Test")
 
 %% Connections
     KCompose --> ACompose 

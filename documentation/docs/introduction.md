@@ -5,7 +5,7 @@ sidebar_position: 1
 # Introduction
 
 Welcome to **Kakao Compose** tutorial. Let's make UI testing easies and simple. In this documentation we will try to explain functionality of Kakao Compose and
-fundamental concepts of implementation, modules and responsibility of each, how to add this library to your project and
+fundamental concepts of implementation, how to add this library to your project and
 how to start works on UI test step by step.
 
 But before we started, don't forget that `KakaoCup` is fully Open Source and supported by community. 
