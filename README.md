@@ -573,6 +573,11 @@ The artifacts were renamed when the library moved to Compose Multiplatform, star
 
 Package names did not change, so imports stay the same. Remove the old artifacts when switching: keeping both makes Gradle report a capability conflict.
 
+`io.github.kakaocup:compose-semantics`, `compose-ui` and `compose-test` are discontinued as of `2.0.0` and have no
+Compose Multiplatform successor. Tests built on the typed nodes (`KButtonNode`, `KTextNode`, ...) should move to plain
+`KNode` with `hasTestTag` or your own semantics keys; projects that still want the Material wrappers can lift them from
+the 1.x sources in git history.
+
 Existing Android tests keep working without code changes. To share tests between Android and iOS, move your
 screens and tests to `commonTest`, replace `onComposeScreen<T>(rule)` with direct instantiation, and run them
 with `runComposeUiTest`.
