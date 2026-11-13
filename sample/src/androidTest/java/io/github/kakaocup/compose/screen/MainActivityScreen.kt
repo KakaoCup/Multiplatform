@@ -1,8 +1,6 @@
 package io.github.kakaocup.compose.screen
 
 import androidx.compose.ui.test.SemanticsNodeInteractionsProvider
-import io.github.kakaocup.compose.foundation.KIconNode
-import io.github.kakaocup.compose.foundation.KTextNode
 import io.github.kakaocup.compose.node.element.ComposeScreen
 import io.github.kakaocup.compose.node.element.KNode
 

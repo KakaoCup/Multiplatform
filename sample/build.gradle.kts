@@ -20,8 +20,6 @@ android {
 
 dependencies {
     androidTestImplementation(project(":compose-multiplatform"))
-    implementation(project(":compose-multiplatform-ui"))
-    androidTestImplementation(project(":compose-multiplatform-test"))
 
     implementation(libs.androidx.appcompat)
     implementation(libs.com.google.android.material)

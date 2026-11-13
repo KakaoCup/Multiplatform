@@ -34,8 +34,12 @@ kotlin {
 :::info Migrating from Kakao Compose
 
 The artifacts were renamed when the library moved to Compose Multiplatform: `io.github.kakaocup:compose` became
-`io.github.kakaocup:compose-multiplatform` (likewise `-semantics`, `-ui` and `-test`), starting at version `2.0.0`.
+`io.github.kakaocup:compose-multiplatform`, starting at version `2.0.0`.
 Package names did not change, so imports stay the same. Remove the old artifacts when switching: keeping both
 makes Gradle report a capability conflict.
+
+`compose-semantics`, `compose-ui` and `compose-test` are discontinued as of `2.0.0` and have no Compose Multiplatform
+successor. Move tests built on the typed nodes (`KButtonNode`, `KTextNode`, ...) to plain `KNode` with `hasTestTag` or
+your own semantics keys.
 
 :::

@@ -1,4 +1,3 @@
-import com.android.build.api.dsl.LibraryExtension
 import io.github.kakaocup.Github
 import java.net.URI
 
@@ -67,30 +66,6 @@ configure<PublishingExtension> {
     }
 }
 
-// Android-only libraries: a single "default" publication built from the release variant
-plugins.withId("com.android.library") {
-    configure<LibraryExtension> {
-        publishing {
-            singleVariant("release") {
-                withJavadocJar()
-                withSourcesJar()
-            }
-        }
-    }
-
-    configure<PublishingExtension> {
-        publications {
-            create<MavenPublication>("default") {
-                components.whenObjectAdded {
-                    if (this.name == "release") {
-                        from(components["release"])
-                    }
-                }
-            }
-        }
-    }
-}
-
 // Multiplatform libraries: KMP creates the publications itself, Maven Central still requires a javadoc jar per artifact
 plugins.withId("org.jetbrains.kotlin.multiplatform") {
     configure<PublishingExtension> {
@@ -105,8 +80,8 @@ plugins.withId("org.jetbrains.kotlin.multiplatform") {
     }
 }
 
-// The libraries keep the io.github.kakaocup.compose.* packages of Kakao Compose, so each artifact also declares
-// the capability of its Kakao Compose predecessor (compose-multiplatform-ui -> compose-ui). Gradle then reports
+// The library keeps the io.github.kakaocup.compose.* packages of Kakao Compose, so the artifact also declares
+// the capability of its Kakao Compose predecessor (compose-multiplatform -> compose). Gradle then reports
 // a capability conflict instead of duplicate classes when both end up on the same classpath.
 // Matched by name: the published variants (KMP "*Elements-published", AGP "*Publication") are neither consumable
 // nor resolvable, and the Android ones do not inherit capabilities from the consumable variants they mirror.

@@ -25,14 +25,8 @@ Android and iOS, and keep working in classic Android instrumented tests.
 | Module | Android | iOS (`iosArm64`, `iosSimulatorArm64`) |
 |---|:---:|:---:|
 | `compose-multiplatform` (core DSL) | ✅ | ✅ |
-| `compose-multiplatform-semantics` | ✅ | ✅ |
-| `compose-multiplatform-ui` | ✅ | ➖ |
-| `compose-multiplatform-test` | ✅ | ➖ |
 
 * `compose-multiplatform` - core module: `ComposeScreen` page objects, `KNode`, matchers, actions, assertions and interceptors
-* `compose-multiplatform-semantics` - optional set of semantics keys shared by the `-ui` and `-test` modules
-* `compose-multiplatform-ui` - optional wrappers over Material components with the same signatures that publish those semantics
-* `compose-multiplatform-test` - optional typed nodes (`KButtonNode`, `KTextNode`, ...) that assert on the published semantics
 
 iOS tests run on the iOS simulator and require macOS with Xcode. Only Apple-silicon simulators are
 supported (`iosSimulatorArm64`); there is no `iosX64` target.
@@ -69,16 +63,7 @@ dependencies {
 }
 ```
 
-Optional modules. They are Android-only, so in a Kotlin Multiplatform project put them into Android
-source sets (`androidMain`, `androidDeviceTest`) rather than `commonMain` / `commonTest`:
-```kotlin
-dependencies {
-    implementation("io.github.kakaocup:compose-multiplatform-ui:<latest version>")
-    androidTestImplementation("io.github.kakaocup:compose-multiplatform-test:<latest version>")
-}
-```
-
-Every push to `master` publishes `-SNAPSHOT` builds of all modules under the same coordinates. To use them add the
+Every push to `master` publishes a `-SNAPSHOT` build under the same coordinates. To use it add the
 snapshot repository:
 ```kotlin
 repositories {
@@ -585,11 +570,13 @@ The artifacts were renamed when the library moved to Compose Multiplatform, star
 | Kakao Compose | Kakao Compose Multiplatform |
 |---|---|
 | `io.github.kakaocup:compose` | `io.github.kakaocup:compose-multiplatform` |
-| `io.github.kakaocup:compose-semantics` | `io.github.kakaocup:compose-multiplatform-semantics` |
-| `io.github.kakaocup:compose-ui` | `io.github.kakaocup:compose-multiplatform-ui` |
-| `io.github.kakaocup:compose-test` | `io.github.kakaocup:compose-multiplatform-test` |
 
 Package names did not change, so imports stay the same. Remove the old artifacts when switching: keeping both makes Gradle report a capability conflict.
+
+`io.github.kakaocup:compose-semantics`, `compose-ui` and `compose-test` are discontinued as of `2.0.0` and have no
+Compose Multiplatform successor. Tests built on the typed nodes (`KButtonNode`, `KTextNode`, ...) should move to plain
+`KNode` with `hasTestTag` or your own semantics keys; projects that still want the Material wrappers can lift them from
+the 1.x sources in git history.
 
 Existing Android tests keep working without code changes. To share tests between Android and iOS, move your
 screens and tests to `commonTest`, replace `onComposeScreen<T>(rule)` with direct instantiation, and run them
